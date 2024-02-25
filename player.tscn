@@ -1,0 +1,61 @@
+[gd_scene load_steps=8 format=3 uid="uid://cbo4hr3xgc4lx"]
+
+[ext_resource type="Script" path="res://player.cs" id="1_vd2af"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_i47wg"]
+albedo_color = Color(0.883422, 0, 0.143192, 1)
+
+[sub_resource type="PrismMesh" id="PrismMesh_lekmy"]
+material = SubResource("StandardMaterial3D_i47wg")
+size = Vector3(0.5, 3, 0.3)
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_b0se5"]
+radius = 0.3
+height = 3.7
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_kx1xe"]
+friction = 0.1
+bounce = 0.5
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_5meyo"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_i3ne2"]
+
+[node name="Player" type="Node3D"]
+script = ExtResource("1_vd2af")
+speed = 2
+
+[node name="Arrow" type="RigidBody3D" parent="."]
+collision_layer = 2
+collision_mask = 0
+axis_lock_angular_x = true
+axis_lock_angular_z = true
+
+[node name="Arrow_mesh" type="MeshInstance3D" parent="Arrow"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
+mesh = SubResource("PrismMesh_lekmy")
+skeleton = NodePath("../..")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Arrow"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
+shape = SubResource("CapsuleShape3D_b0se5")
+
+[node name="Arrow_end" type="Marker3D" parent="Arrow"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.5)
+
+[node name="Arrow_tip" type="Marker3D" parent="Arrow"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.5)
+
+[node name="Body" type="RigidBody3D" parent="."]
+axis_lock_angular_x = true
+axis_lock_angular_z = true
+physics_material_override = SubResource("PhysicsMaterial_kx1xe")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Body"]
+mesh = SubResource("CapsuleMesh_5meyo")
+skeleton = NodePath("../..")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Body"]
+shape = SubResource("CapsuleShape3D_i3ne2")
+
+[connection signal="input_event" from="Arrow" to="." method="_on_arrow_input_event"]
