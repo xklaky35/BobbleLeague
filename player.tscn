@@ -2,10 +2,6 @@
 
 [ext_resource type="Script" path="res://player.cs" id="1_vd2af"]
 
-[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_kx1xe"]
-friction = 0.1
-bounce = 0.5
-
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_5meyo"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_i3ne2"]
@@ -13,24 +9,41 @@ bounce = 0.5
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_okkt3"]
 radius = 1.0
 
-[node name="Player" type="Node3D"]
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_6nv7o"]
+
+[node name="Player" type="RigidBody3D"]
+axis_lock_angular_x = true
+axis_lock_angular_y = true
+axis_lock_angular_z = true
 script = ExtResource("1_vd2af")
 speed = 2
 
-[node name="Body" type="RigidBody3D" parent="."]
-axis_lock_angular_x = true
-axis_lock_angular_z = true
-physics_material_override = SubResource("PhysicsMaterial_kx1xe")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Body"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = SubResource("CapsuleMesh_5meyo")
-skeleton = NodePath("../..")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Body"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_i3ne2")
 
-[node name="Arrow" type="MeshInstance3D" parent="."]
+[node name="Arrow" type="RigidBody3D" parent="."]
+top_level = true
+collision_layer = 2
+collision_mask = 0
+axis_lock_linear_x = true
+axis_lock_linear_y = true
+axis_lock_linear_z = true
+axis_lock_angular_x = true
+axis_lock_angular_y = true
+axis_lock_angular_z = true
+lock_rotation = true
+
+[node name="ArrowBody" type="MeshInstance3D" parent="Arrow"]
 transform = Transform3D(0.1146, 0, 0, 0, 0.156234, 0, 0, 0, 1.69446, 0, 0, 0)
 mesh = SubResource("CapsuleMesh_okkt3")
+skeleton = NodePath("../..")
 
-[connection signal="input_event" from="Body" to="." method="_on_body_input_event"]
+[node name="ArrowShape" type="CollisionShape3D" parent="Arrow"]
+transform = Transform3D(0.156, 0, 0, 0, 0.156, 0, 0, 0, 0.156, 0, -0.5, 0)
+shape = SubResource("CapsuleShape3D_6nv7o")
+disabled = true
+
+[connection signal="input_event" from="." to="." method="_on_input_event"]

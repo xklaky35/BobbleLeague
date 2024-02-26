@@ -41,5 +41,4 @@ script = ExtResource("4_m4t01")
 [node name="Timer" type="Timer" parent="."]
 wait_time = 3.0
 
-[connection signal="timeout" from="Timer" to="Player" method="_on_timer_timeout"]
 [connection signal="timeout" from="Timer" to="UI/Label" method="_on_timer_timeout"]
