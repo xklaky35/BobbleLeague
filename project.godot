@@ -11,13 +11,13 @@ config_version=5
 [application]
 
 config/name="BobbleLeague"
-run/main_scene="res://main_game.tscn"
+run/main_scene="res://Scenes/main_game.tscn"
 config/features=PackedStringArray("4.2", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
 
-GameManager="*res://GameManager.cs"
+GameManager="*res://src/Networking/GameManager.cs"
 
 [dotnet]
 
