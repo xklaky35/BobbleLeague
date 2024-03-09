@@ -18,6 +18,11 @@ namespace src.Networking{
 		[Signal]
 		public delegate void ServerDisconnectedEventHandler();
 
+		[Signal]
+		public delegate void PlayerSwitchedToBlueEventHandler();
+		[Signal]
+		public delegate void PlayerSwitchedToRedEventHandler();
+
 
 
 		public override void _Ready(){
@@ -35,12 +40,14 @@ namespace src.Networking{
 		// id is the peer connecting
 		private void OnPlayerConnected(long id){
 			GD.Print("Client " + id + " connected!(ALL)" + Multiplayer.GetUniqueId());
+			EmitSignal("PlayerConnected", id);
 		}
 
 		// called on all the peers
 		// id is the peer disconnecting
 		private void OnPlayerDisconnected(long id){
 			GD.Print("Client " + id + " disconnected!(ALL)" + Multiplayer.GetUniqueId());
+			EmitSignal("PlayerDisconnected", id);
 		}
 
 		// only on client
@@ -60,7 +67,7 @@ namespace src.Networking{
 		}
 
 
-		// #### BUTTONS ON THE UI ####
+		// ##### BUTTONS ON THE UI #####
 
 		// create game
 		// start a multiplayer server
@@ -82,39 +89,196 @@ namespace src.Networking{
 			GD.Print("Client Created");
 		}
 
-		// only doable by the host/server
-		// starts the main game
-		private void _on_start_button_down(){
 
-		}
-
-
-
-		// ### RPC CALLS ###
-		[Rpc(MultiplayerApi.RpcMode.AnyPeer)] 
-			private void _register_player(int playerID, string player_name){
-				// create a new blob of data for the host
-				PlayerInfo playerInfo = new PlayerInfo{
-					player_id = playerID,
-							  player_name = player_name,
-				};
-				if(!GameManager.playerData.Contains(playerInfo)){
-					GameManager.playerData.Add(playerInfo);
+		private void _on_switch_to_blue_button_down()
+		{
+			if(Multiplayer.GetUniqueId() != 1){
+				//the player has to exist in the playerData list
+				foreach(var item in GameManager.playerData){
+					//needed to access the name
+					if(item.player_id == Multiplayer.GetUniqueId()){
+						RpcId(1, "_addToBlueTeam", item.player_id, item.player_name);
+					}
 				}
-
-				if(Multiplayer.IsServer()){
-					foreach(var item in GameManager.playerData){
-						Rpc("_register_player", playerID, player_name);
-						showLobby();
+			}else{
+				foreach(var item in GameManager.playerData){
+					//needed to access the name
+					if(item.player_id == Multiplayer.GetUniqueId()){
+						_addToBlueTeam(item.player_id, item.player_name);
 					}
 				}
 			}
 
+		}
+
+
+		private void _on_switch_to_red_button_down()
+		{
+			//if you are not the server send him data
+			if(Multiplayer.GetUniqueId() != 1){
+				//the player has to exist in the playerData list
+				foreach(var item in GameManager.playerData){
+					//needed to access the name
+					if(item.player_id == Multiplayer.GetUniqueId()){
+						RpcId(1, "_addToRedTeam", item.player_id, item.player_name);
+					}
+				}
+			}else{
+				foreach(var item in GameManager.playerData){
+					//needed to access the name
+					if(item.player_id == Multiplayer.GetUniqueId()){
+						_addToRedTeam(item.player_id, item.player_name);
+					}
+				}
+			}
+		}
+
+
+		// starts the main game
+		private void _on_start_button_down(){
+			//only the host can start the game
+			if(Multiplayer.GetUniqueId() == 1){
+				Rpc("_start_game");
+			}else{
+				GD.Print("Wait for the host to start!");
+			}
+
+		}
+
+
+
+
+		// ##### RPC CALLS #####
+		
+		[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+		private void _start_game(){
+			var scene = GD.Load<PackedScene>("res://Scenes/main_game.tscn").Instantiate<Node3D>();
+			GetTree().Root.AddChild(scene);
+			this.Hide();
+		}
+
+
+		//register player data when connecting
+		[Rpc(MultiplayerApi.RpcMode.AnyPeer)] 
+		private void _register_player(int playerID, string player_name){
+			// create a new blob of data for the host
+			PlayerInfo playerInfo = new PlayerInfo{
+				player_id = playerID,
+				player_name = player_name,
+			};
+			if(!GameManager.playerData.Contains(playerInfo)){
+				GameManager.playerData.Add(playerInfo);
+			}
+
+			if(Multiplayer.IsServer()){
+				foreach(var item in GameManager.playerData){
+					Rpc("_register_player", item.player_id, item.player_name);
+					showLobby();
+				}
+			}
+			EmitSignal("PlayerConnected", playerID);
+		}
+
+
 		[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
 		private void showLobby(){
 			foreach(var item in GameManager.playerData){
-				GD.Print(item.player_name + " : " + item.player_id);
+				GD.Print("Main" + item.player_name + " : " + item.player_id);
 			}
+
+			//Print blue team
+			foreach(var item in GameManager.bluePlayerData){
+				GD.Print("Blue" + item.player_name + " : " + item.player_id);
+			}
+
+			//Print red team
+			foreach(var item in GameManager.redPlayerData){
+				GD.Print("Red" + item.player_name + " : " + item.player_id);
+			}
+		}
+
+
+		//add player data to blue team if selected
+		[Rpc(MultiplayerApi.RpcMode.AnyPeer)] 
+		private void _addToBlueTeam(int playerID, string player_name){
+			PlayerInfo playerInfo = new PlayerInfo{
+				player_id = playerID,
+				player_name = player_name,
+			};
+
+			bool alreadyInBlue = false;
+
+			//check if player already is in blue team
+			foreach(var item in GameManager.bluePlayerData){
+				if(item.player_id == playerInfo.player_id) alreadyInBlue = true;
+			}
+			if(alreadyInBlue == false) GameManager.bluePlayerData.Add(playerInfo);
+
+			bool inRedBefore = false;
+			//check if player was in red team before
+			foreach(var item in GameManager.redPlayerData){
+				if(item.player_id == playerInfo.player_id) inRedBefore = true;
+			}
+			if(inRedBefore == true){
+				foreach(var item in GameManager.redPlayerData){
+					if(item.player_id == playerInfo.player_id){
+						GameManager.redPlayerData.Remove(item);
+						break;
+					}               }
+			}
+
+			if(Multiplayer.IsServer()){
+				foreach(var item in GameManager.bluePlayerData){
+					Rpc("_addToBlueTeam", item.player_id, item.player_name);
+					showLobby();
+				}
+			}
+			EmitSignal("PlayerSwitchedToBlue");
+		}
+
+
+		//add player data to red team if selected
+		[Rpc(MultiplayerApi.RpcMode.AnyPeer)] 
+		private void _addToRedTeam(int playerID, string player_name){
+			PlayerInfo playerInfo = new PlayerInfo{
+				player_id = playerID,
+				player_name = player_name,
+			};
+
+			bool alreadyInRed = false;
+
+			//check if player already is in red team
+			foreach(var item in GameManager.redPlayerData){
+				if(item.player_id == playerInfo.player_id) alreadyInRed = true;
+			}
+
+			if(alreadyInRed == false)  GameManager.redPlayerData.Add(playerInfo);
+
+			bool inBlueBefore = false;
+			//check if player was in blue team before
+			foreach(var item in GameManager.bluePlayerData){
+				if(item.player_id == playerInfo.player_id) inBlueBefore = true;
+			}
+
+			if(inBlueBefore == true){
+				foreach(var item in GameManager.bluePlayerData){
+					if(item.player_id == playerInfo.player_id){
+						GameManager.bluePlayerData.Remove(item);
+						break;
+					}                }
+			}
+
+			if(Multiplayer.IsServer()){
+				foreach(var item in GameManager.redPlayerData){
+					Rpc("_addToRedTeam", item.player_id, item.player_name);
+					showLobby();
+				}
+			}
+			EmitSignal("PlayerSwitchedToRed");
 		}
 	}
 }
+
+
+
+

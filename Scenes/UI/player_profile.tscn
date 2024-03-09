@@ -1,0 +1,50 @@
+[gd_scene load_steps=2 format=3 uid="uid://itddrskwl8c8"]
+
+[ext_resource type="Script" path="res://src/UI/PlayerProfile.cs" id="1_qby38"]
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -981.0
+offset_bottom = -568.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_qby38")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 0
+offset_right = 172.0
+offset_bottom = 80.0
+color = Color(0.52549, 0.623529, 0.866667, 1)
+
+[node name="NAME" type="Label" parent="ColorRect"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 6.0
+offset_right = 69.0
+offset_bottom = 37.0
+text = "Name:"
+
+[node name="name_player" type="Label" parent="ColorRect"]
+layout_mode = 0
+offset_left = 65.0
+offset_top = 7.0
+offset_right = 168.0
+offset_bottom = 30.0
+
+[node name="ID" type="Label" parent="ColorRect"]
+layout_mode = 0
+offset_left = 9.0
+offset_top = 31.0
+offset_right = 58.0
+offset_bottom = 56.0
+text = "Id:"
+
+[node name="id_player" type="Label" parent="ColorRect"]
+layout_mode = 0
+offset_left = 35.0
+offset_top = 34.0
+offset_right = 166.0
+offset_bottom = 57.0

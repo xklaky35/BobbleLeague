@@ -1,8 +1,7 @@
 using Godot;
-using src.Player;
 
 namespace src.Player{
-	public partial class Player : RigidBody3D{
+	public partial class PlayerClass : RigidBody3D{
 
 		private const float RayRange = 1000f;
 

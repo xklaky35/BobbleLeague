@@ -1,6 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://u1qgeqqcyad2"]
+[gd_scene load_steps=4 format=3 uid="uid://u1qgeqqcyad2"]
 
 [ext_resource type="Script" path="res://src/Networking/Lobby.cs" id="1_3ek75"]
+[ext_resource type="Script" path="res://src/UI/Player_list.cs" id="2_gbeoh"]
+[ext_resource type="PackedScene" uid="uid://itddrskwl8c8" path="res://Scenes/UI/player_profile.tscn" id="3_qb4wo"]
 
 [node name="Lobby" type="Control"]
 layout_mode = 3
@@ -37,6 +39,22 @@ offset_bottom = 158.0
 text = "Start
 "
 
+[node name="SwitchToRed" type="Button" parent="."]
+layout_mode = 0
+offset_left = 664.0
+offset_top = 340.0
+offset_right = 724.0
+offset_bottom = 380.0
+text = "Red >>"
+
+[node name="SwitchToBlue" type="Button" parent="."]
+layout_mode = 0
+offset_left = 332.0
+offset_top = 341.0
+offset_right = 397.0
+offset_bottom = 381.0
+text = "<< Blue"
+
 [node name="LineEdit" type="LineEdit" parent="."]
 layout_mode = 0
 offset_left = 92.0
@@ -52,6 +70,42 @@ offset_right = 91.0
 offset_bottom = 70.0
 text = "Name"
 
+[node name="Player_list" type="Control" parent="."]
+anchors_preset = 0
+offset_left = 464.0
+offset_top = 99.0
+offset_right = 541.0
+offset_bottom = 149.0
+script = ExtResource("2_gbeoh")
+player_profile = ExtResource("3_qb4wo")
+
+[node name="PlayerListMain" type="Control" parent="Player_list"]
+anchors_preset = 0
+offset_left = -1.0
+offset_top = 92.0
+offset_right = 39.0
+offset_bottom = 132.0
+
+[node name="PlayerListBlue" type="Control" parent="Player_list"]
+anchors_preset = 0
+offset_left = -412.0
+offset_top = 107.0
+offset_right = -372.0
+offset_bottom = 147.0
+
+[node name="PlayerListRed" type="Control" parent="Player_list"]
+anchors_preset = 0
+offset_left = 339.0
+offset_top = 108.0
+offset_right = 379.0
+offset_bottom = 148.0
+
+[connection signal="PlayerConnected" from="." to="Player_list" method="_on_lobby_player_connected"]
+[connection signal="PlayerDisconnected" from="." to="Player_list" method="_on_lobby_player_disconnected"]
+[connection signal="PlayerSwitchedToBlue" from="." to="Player_list" method="_on_lobby_player_switched_to_blue"]
+[connection signal="PlayerSwitchedToRed" from="." to="Player_list" method="_on_lobby_player_switched_to_red"]
 [connection signal="button_down" from="Host" to="." method="_on_host_button_down"]
 [connection signal="button_down" from="Join" to="." method="_on_join_button_down"]
 [connection signal="button_down" from="Start" to="." method="_on_start_button_down"]
+[connection signal="button_down" from="SwitchToRed" to="." method="_on_switch_to_red_button_down"]
+[connection signal="button_down" from="SwitchToBlue" to="." method="_on_switch_to_blue_button_down"]

@@ -1,11 +1,14 @@
-[gd_scene load_steps=5 format=3 uid="uid://fs3l27lttmic"]
+[gd_scene load_steps=6 format=3 uid="uid://fs3l27lttmic"]
 
+[ext_resource type="Script" path="res://src/Networking/PlayerManager.cs" id="1_kpqce"]
 [ext_resource type="PackedScene" uid="uid://ddw5ioki5714y" path="res://Scenes/GameOnbjects/field.tscn" id="1_mms5w"]
 [ext_resource type="PackedScene" uid="uid://bxqicvupecqdm" path="res://Scenes/GameOnbjects/ball.tscn" id="2_3lt6f"]
-[ext_resource type="PackedScene" uid="uid://cbo4hr3xgc4lx" path="res://Scenes/GameOnbjects/player.tscn" id="3_tl8px"]
+[ext_resource type="PackedScene" uid="uid://cbo4hr3xgc4lx" path="res://Scenes/GameOnbjects/player.tscn" id="2_je0w2"]
 [ext_resource type="Script" path="res://src/UI/Label.cs" id="4_m4t01"]
 
 [node name="Main" type="Node3D"]
+script = ExtResource("1_kpqce")
+playerScene = ExtResource("2_je0w2")
 
 [node name="Field" parent="." instance=ExtResource("1_mms5w")]
 
@@ -22,9 +25,6 @@ spot_range = 100.0
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.03529, 0)
 mass = 0.5
 
-[node name="Player" parent="." instance=ExtResource("3_tl8px")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.09941, 4.46707)
-
 [node name="UI" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 0
@@ -40,5 +40,31 @@ script = ExtResource("4_m4t01")
 
 [node name="Timer" type="Timer" parent="."]
 wait_time = 3.0
+
+[node name="PlayerSpawnPoints" type="Node3D" parent="."]
+
+[node name="0" type="Node3D" parent="PlayerSpawnPoints" groups=["PlayerSide"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5)
+
+[node name="0" type="Node3D" parent="PlayerSpawnPoints/0" groups=["PlayerSpawnBlue"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, 1)
+
+[node name="1" type="Node3D" parent="PlayerSpawnPoints/0" groups=["PlayerSpawnBlue"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 1)
+
+[node name="2" type="Node3D" parent="PlayerSpawnPoints/0" groups=["PlayerSpawnBlue"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
+
+[node name="1" type="Node3D" parent="PlayerSpawnPoints" groups=["PlayerSide"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -5)
+
+[node name="0" type="Node3D" parent="PlayerSpawnPoints/1" groups=["PlayerSpawnRed"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, -1)
+
+[node name="1" type="Node3D" parent="PlayerSpawnPoints/1" groups=["PlayerSpawnRed"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, -1)
+
+[node name="2" type="Node3D" parent="PlayerSpawnPoints/1" groups=["PlayerSpawnRed"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1)
 
 [connection signal="timeout" from="Timer" to="UI/Label" method="_on_timer_timeout"]
