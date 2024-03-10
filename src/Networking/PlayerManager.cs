@@ -60,13 +60,13 @@ namespace src.Networking{
 			Array<Node> bluePlayers = GetTree().GetNodesInGroup("BluePlayer");
 
 			int playerIndex = 0;
-            int bluePlayerCount = GameManager.bluePlayerData.Count;
+			int bluePlayerCount = GameManager.bluePlayerData.Count;
 			
 			foreach(var player in bluePlayers){
 				//depending on how many players are in the blue team(index%anzahl) add rights for the players to the objects
 				player.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetMultiplayerAuthority(GameManager.bluePlayerData[playerIndex%bluePlayerCount].player_id);
 				playerIndex++;
-                GD.Print(player.Name + "-> ID: " + GameManager.bluePlayerData[playerIndex%bluePlayerCount].player_id);
+				GD.Print(player.Name + "-> ID: " + GameManager.bluePlayerData[playerIndex%bluePlayerCount].player_id);
 			}
 
 		}
@@ -74,13 +74,13 @@ namespace src.Networking{
 			Array<Node> redPlayers = GetTree().GetNodesInGroup("RedPlayer");
 
 			int playerIndex = 0;
-            int redPlayerCount = GameManager.redPlayerData.Count;
+			int redPlayerCount = GameManager.redPlayerData.Count;
 			
 			foreach(var player in redPlayers){
 				//depending on how many players are in the red team(index%anzahl) add rights for the players to the objects
 				player.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetMultiplayerAuthority(GameManager.redPlayerData[playerIndex%redPlayerCount].player_id);
 				playerIndex++;
-                GD.Print(player.Name + "-> ID: " + GameManager.redPlayerData[playerIndex%redPlayerCount].player_id);
+				GD.Print(player.Name + "-> ID: " + GameManager.redPlayerData[playerIndex%redPlayerCount].player_id);
 			}
 
 		}

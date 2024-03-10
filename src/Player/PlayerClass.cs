@@ -1,5 +1,4 @@
 using Godot;
-using src.Networking;
 
 namespace src.Player{
 	public partial class PlayerClass : RigidBody3D{
@@ -24,12 +23,12 @@ namespace src.Player{
 		public override void _Ready(){
 
 
-			camera = GetNode<Camera3D>("../Camera3D");
+			camera = GetNode<Camera3D>("/root/Main/Camera3D");
 			arrow_body = GetNode<MeshInstance3D>("Arrow/ArrowBody");
 			arrow = GetNode<RigidBody3D>("Arrow");
 
 			// connect player to the timeout event
-			timer = GetNode<Timer>("../Timer");
+			timer = GetNode<Timer>("/root/Main/Timer");
 			timer.Timeout += _on_timer_timeout;
 		}
 
