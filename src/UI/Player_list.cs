@@ -41,7 +41,7 @@ namespace src.UI{
 
 
 		private void _on_lobby_player_switched_to_blue(){
-            _removePlayerProfiles();
+			_removePlayerProfiles();
 			//_createPlayerProfiles(playerListMain, "main");
 			_createPlayerProfiles(playerListBlue, "blue");
 			_createPlayerProfiles(playerListRed, "red");
@@ -50,7 +50,7 @@ namespace src.UI{
 
 		private void _on_lobby_player_switched_to_red(){
 
-            _removePlayerProfiles();
+			_removePlayerProfiles();
 			//_createPlayerProfiles(playerListMain, "main");
 			_createPlayerProfiles(playerListBlue, "blue");
 			_createPlayerProfiles(playerListRed, "red");

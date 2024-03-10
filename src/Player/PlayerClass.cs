@@ -1,4 +1,5 @@
 using Godot;
+using src.Networking;
 
 namespace src.Player{
 	public partial class PlayerClass : RigidBody3D{
@@ -6,7 +7,7 @@ namespace src.Player{
 		private const float RayRange = 1000f;
 
 		[Export]
-		public int speed {get; set;}
+		public int speed = 5;
 
 		bool is_pressed;
 
@@ -17,9 +18,12 @@ namespace src.Player{
 		MeshInstance3D arrow_body;
 		Timer timer;
 
+		
 
 		// init camera
 		public override void _Ready(){
+
+
 			camera = GetNode<Camera3D>("../Camera3D");
 			arrow_body = GetNode<MeshInstance3D>("Arrow/ArrowBody");
 			arrow = GetNode<RigidBody3D>("Arrow");
@@ -31,8 +35,13 @@ namespace src.Player{
 
 		// game loop
 		public override void _PhysicsProcess(double delta){
-			CheckMousePosition();
-			arrow.Position = Position;
+			
+			if(GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").GetMultiplayerAuthority() == Multiplayer.GetUniqueId()){
+				CheckMousePosition();
+				arrow.Position = Position;
+			}else{
+				arrow.Hide();
+			}
 		}
 
 		//add force to the 'Body element'
