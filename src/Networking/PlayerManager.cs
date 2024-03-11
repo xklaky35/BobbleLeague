@@ -26,12 +26,14 @@ namespace src.Networking{
 				PlayerClass currentPlayer = playerScene.Instantiate<PlayerClass>();
 				currentPlayer.Name = "BluePlayer_" + index;
 				currentPlayer.AddToGroup("BluePlayer");
+				currentPlayer.AddToGroup("Player");
 
 
 				AddChild(currentPlayer);
 
 				if(int.Parse(spawnPoint.Name) == index){
 					currentPlayer.GlobalPosition = spawnPoint.GlobalPosition;
+					currentPlayer.prevPos = spawnPoint.GlobalPosition;
 				}
 				index++;
 			}
@@ -46,11 +48,13 @@ namespace src.Networking{
 				PlayerClass currentPlayer = playerScene.Instantiate<PlayerClass>();
 				currentPlayer.Name = "RedPlayer_" + index;
 				currentPlayer.AddToGroup("RedPlayer");
+				currentPlayer.AddToGroup("Player");
 				
 				AddChild(currentPlayer);
 
 				if(int.Parse(spawnPoint.Name) == index){
 					currentPlayer.GlobalPosition = spawnPoint.GlobalPosition;
+					currentPlayer.prevPos = spawnPoint.GlobalPosition;
 				}
 				index++;
 			}

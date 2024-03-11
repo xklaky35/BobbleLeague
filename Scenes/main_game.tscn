@@ -39,7 +39,8 @@ text = "Timer: "
 script = ExtResource("4_m4t01")
 
 [node name="Timer" type="Timer" parent="."]
-wait_time = 3.0
+wait_time = 10.0
+one_shot = true
 
 [node name="PlayerSpawnPoints" type="Node3D" parent="."]
 script = ExtResource("1_kpqce")
@@ -68,5 +69,3 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, -1)
 
 [node name="2" type="Node3D" parent="PlayerSpawnPoints/1" groups=["PlayerSpawnRed"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1)
-
-[connection signal="timeout" from="Timer" to="UI/Label" method="_on_timer_timeout"]

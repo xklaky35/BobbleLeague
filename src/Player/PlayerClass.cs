@@ -1,4 +1,5 @@
 using Godot;
+using src.GameLogic;
 
 namespace src.Player{
 	public partial class PlayerClass : RigidBody3D{
@@ -7,8 +8,10 @@ namespace src.Player{
 
 		[Export]
 		public int speed = 5;
+		public bool isMoving;
 
 		bool is_pressed;
+		public Vector3 prevPos;
 
 		Vector3 direction;
 
@@ -17,9 +20,11 @@ namespace src.Player{
 		MeshInstance3D arrow_body;
 		Timer timer;
 
+		[Signal]
+		public delegate void IsMovingEventHandler();
+
 		
 
-		// init camera
 		public override void _Ready(){
 
 
@@ -30,11 +35,12 @@ namespace src.Player{
 			// connect player to the timeout event
 			timer = GetNode<Timer>("/root/Main/Timer");
 			timer.Timeout += _on_timer_timeout;
+			isMoving = false;
 		}
 
-		// game loop
+
 		public override void _PhysicsProcess(double delta){
-			
+			checkPlayerMovement();
 			if(GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").GetMultiplayerAuthority() == Multiplayer.GetUniqueId()){
 				CheckMousePosition();
 				arrow.Position = Position;
@@ -84,6 +90,19 @@ namespace src.Player{
 				}
 			}
 
+		}
+
+
+		private void checkPlayerMovement(){
+			
+			Vector3 movementCheck = (GlobalPosition - prevPos) * (new Vector3(1,0,1));
+			if(movementCheck != new Vector3(0,0,0)){
+				MainGame.movement = true;
+			}else{
+				MainGame.movement = false;
+			}
+
+			prevPos = GlobalPosition;
 		}
 
 
