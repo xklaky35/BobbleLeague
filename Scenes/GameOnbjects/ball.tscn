@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://bxqicvupecqdm"]
+[gd_scene load_steps=6 format=3 uid="uid://bxqicvupecqdm"]
 
 [ext_resource type="Script" path="res://src/Player/Ball.cs" id="1_kcq27"]
 
@@ -10,6 +10,11 @@ rough = true
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_i65lk"]
 
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_b1m2a"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+
 [node name="Ball" type="RigidBody3D"]
 physics_material_override = SubResource("PhysicsMaterial_3jlcx")
 script = ExtResource("1_kcq27")
@@ -19,3 +24,6 @@ mesh = SubResource("SphereMesh_pwpcn")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("SphereShape3D_i65lk")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_b1m2a")

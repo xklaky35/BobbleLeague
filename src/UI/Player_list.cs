@@ -26,23 +26,21 @@ namespace src.UI{
 		private void _on_lobby_player_connected(long peer_id){
 
 			_removePlayerProfiles();
-			//_createPlayerProfiles(playerListMain, "main");
+			_createPlayerProfiles(playerListMain, "main");
 			_createPlayerProfiles(playerListBlue, "blue");
 			_createPlayerProfiles(playerListRed, "red");
 		}
 
 
 		private void _on_lobby_player_disconnected(long peer_id){
-
 			_removePlayerProfiles();
-			//_createPlayerProfiles(playerListMain, "main");
-
+			_createPlayerProfiles(playerListMain, "main");
 		}
 
 
 		private void _on_lobby_player_switched_to_blue(){
 			_removePlayerProfiles();
-			//_createPlayerProfiles(playerListMain, "main");
+			_createPlayerProfiles(playerListMain, "main");
 			_createPlayerProfiles(playerListBlue, "blue");
 			_createPlayerProfiles(playerListRed, "red");
 		}
@@ -51,11 +49,10 @@ namespace src.UI{
 		private void _on_lobby_player_switched_to_red(){
 
 			_removePlayerProfiles();
-			//_createPlayerProfiles(playerListMain, "main");
+			_createPlayerProfiles(playerListMain, "main");
 			_createPlayerProfiles(playerListBlue, "blue");
 			_createPlayerProfiles(playerListRed, "red");
 		}
-
 
 
 		private void _createPlayerProfiles(Control target, string team){
@@ -104,6 +101,8 @@ namespace src.UI{
 		}
 	}
 }
+
+
 
 
 

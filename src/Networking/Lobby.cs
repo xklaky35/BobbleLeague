@@ -1,5 +1,7 @@
 using Godot;
+using System.Collections.Generic;
 using src.Player;
+
 
 namespace src.Networking{
 	public partial class Lobby : Control
@@ -92,6 +94,7 @@ namespace src.Networking{
 
 		private void _on_switch_to_blue_button_down()
 		{
+
 			if(Multiplayer.GetUniqueId() != 1){
 				//the player has to exist in the playerData list
 				foreach(var item in GameManager.playerData){
@@ -116,9 +119,9 @@ namespace src.Networking{
 		{
 			//if you are not the server send him data
 			if(Multiplayer.GetUniqueId() != 1){
-				//the player has to exist in the playerData list
+				//needed to access the name
 				foreach(var item in GameManager.playerData){
-					//needed to access the name
+					//the player has to exist in the playerData list
 					if(item.player_id == Multiplayer.GetUniqueId()){
 						RpcId(1, "_addToRedTeam", item.player_id, item.player_name);
 					}
@@ -170,13 +173,20 @@ namespace src.Networking{
 				GameManager.playerData.Add(playerInfo);
 			}
 
+			// send the data to all players
 			if(Multiplayer.IsServer()){
-				foreach(var item in GameManager.playerData){
-					Rpc("_register_player", item.player_id, item.player_name);
+				foreach(var player in GameManager.playerData){
+					Rpc("_register_player", player.player_id, player.player_name);
 					showLobby();
 				}
+				foreach(var player in GameManager.bluePlayerData){
+					Rpc("_syncTeamState", player.player_id, player.player_name, "blue");
+				}
+				foreach(var player in GameManager.redPlayerData){
+					Rpc("_syncTeamState", player.player_id, player.player_name, "red");
+				}
+				EmitSignal("PlayerConnected", playerID);
 			}
-			EmitSignal("PlayerConnected", playerID);
 		}
 
 
@@ -275,6 +285,24 @@ namespace src.Networking{
 				}
 			}
 			EmitSignal("PlayerSwitchedToRed");
+		}
+		
+		[Rpc(MultiplayerApi.RpcMode.AnyPeer)]
+		private void _syncTeamState(int playerID, string playerName, string team){
+			if(!Multiplayer.IsServer()){
+				if(team == "blue"){
+					//sync blue team data
+					GameManager.bluePlayerData.Add(new PlayerInfo{player_id = playerID, player_name = playerName});
+				}else{
+					//sync red team data
+					GameManager.redPlayerData.Add(new PlayerInfo{player_id = playerID, player_name = playerName});
+				}
+			}
+			EmitSignal("PlayerConnected", playerID);
+			// the server has to send all its data to the clients
+			if(Multiplayer.IsServer()){
+
+			}
 		}
 	}
 }

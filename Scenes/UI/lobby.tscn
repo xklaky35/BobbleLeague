@@ -72,10 +72,10 @@ text = "Name"
 
 [node name="Player_list" type="Control" parent="."]
 anchors_preset = 0
-offset_left = 464.0
-offset_top = 99.0
-offset_right = 541.0
-offset_bottom = 149.0
+offset_left = 479.0
+offset_top = 165.0
+offset_right = 556.0
+offset_bottom = 215.0
 script = ExtResource("2_gbeoh")
 player_profile = ExtResource("3_qb4wo")
 

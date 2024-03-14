@@ -1,5 +1,6 @@
 using Godot;
 using src.GameLogic;
+using src.Networking;
 
 namespace src.Player{
 	public partial class PlayerClass : RigidBody3D{
@@ -23,11 +24,7 @@ namespace src.Player{
 		[Signal]
 		public delegate void IsMovingEventHandler();
 
-		
-
 		public override void _Ready(){
-
-
 			camera = GetNode<Camera3D>("/root/Main/Camera3D");
 			arrow_body = GetNode<MeshInstance3D>("Arrow/ArrowBody");
 			arrow = GetNode<RigidBody3D>("Arrow");
@@ -40,19 +37,24 @@ namespace src.Player{
 
 
 		public override void _PhysicsProcess(double delta){
-			checkPlayerMovement();
-			if(GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").GetMultiplayerAuthority() == Multiplayer.GetUniqueId()){
+			if(GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").GetMultiplayerAuthority() == Multiplayer.GetUniqueId()) {
 				CheckMousePosition();
 				arrow.Position = Position;
+				arrow.Show();
 			}else{
 				arrow.Hide();
 			}
+
+			//if(MainGame.isPaused){
+			//	arrow.Hide();
+			//}else{
+			//	arrowTeamVisibility();
+			//}
 		}
 
 		//add force to the 'Body element'
 		private void POWER(){
 			ApplyCentralImpulse(direction * speed);
-			arrow.Visible = false;
 		}
 
 
@@ -94,12 +96,11 @@ namespace src.Player{
 
 
 		private void checkPlayerMovement(){
-			
 			Vector3 movementCheck = (GlobalPosition - prevPos) * (new Vector3(1,0,1));
 			if(movementCheck != new Vector3(0,0,0)){
-				MainGame.movement = true;
+				MainGame.playerMoving = true;
 			}else{
-				MainGame.movement = false;
+				MainGame.playerMoving = false;
 			}
 
 			prevPos = GlobalPosition;
@@ -124,6 +125,33 @@ namespace src.Player{
 			if(@event is InputEventMouseButton mouseButton && mouseButton.Pressed == false){
 				is_pressed = false;
 			}
+		}
+
+		private void arrowTeamVisibility(){
+			if(GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").GetMultiplayerAuthority() == Multiplayer.GetUniqueId()) {
+				CheckMousePosition();
+				arrow.Position = Position;
+				arrow.Show();
+			}
+			// if this the authority of this player is in the the red team and this 
+			//foreach(var player in GameManager.redPlayerData){
+			//	if(GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").GetMultiplayerAuthority() == player.player_id) {
+			//		if(IsInGroup("RedPlayer")){
+			//			arrow.Show();
+			//		}else{
+			//			arrow.Hide();
+			//		}
+			//	}
+			//}
+			//foreach(var player in GameManager.bluePlayerData){
+			//	if(GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").GetMultiplayerAuthority() == player.player_id) {
+			//		if(IsInGroup("BluePlayer")){
+			//			arrow.Show();
+			//		}else{
+			//			arrow.Hide();
+			//		}
+			//	}
+			//}
 		}
 	}
 }
