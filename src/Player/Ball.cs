@@ -1,5 +1,4 @@
 using Godot;
-using src.GameLogic;
 
 namespace src.Player{
 	public partial class Ball : RigidBody3D{
@@ -20,9 +19,9 @@ namespace src.Player{
 		private void checkPlayerMovement(){
 			Vector3 movementCheck = (GlobalPosition - prevPos) * (new Vector3(1,0,1));
 			if(movementCheck != new Vector3(0,0,0)){
-				MainGame.ballMoving = true;
+				isMoving = true;
 			}else{
-				MainGame.ballMoving = false;
+				isMoving = false;
 			}
 			prevPos = GlobalPosition;
 		}

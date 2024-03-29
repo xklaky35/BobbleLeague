@@ -1,8 +1,8 @@
 using Godot;
 using Godot.Collections;
-using src.Player;
+using src.Networking;
 
-namespace src.Networking{
+namespace src.Player{
 
 	public partial class PlayerManager : Node3D
 	{

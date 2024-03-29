@@ -1,6 +1,4 @@
 using Godot;
-using src.GameLogic;
-using src.Networking;
 
 namespace src.Player{
 	public partial class PlayerClass : RigidBody3D{
@@ -9,7 +7,7 @@ namespace src.Player{
 
 		[Export]
 		public int speed = 5;
-		public bool isMoving;
+		public bool isMoving = false;
 
 		bool is_pressed;
 		public Vector3 prevPos;
@@ -19,12 +17,14 @@ namespace src.Player{
 		RigidBody3D arrow;
 		Camera3D camera;
 		MeshInstance3D arrow_body;
+
+
 		Timer timer;
 
-		[Signal]
-		public delegate void IsMovingEventHandler();
-
 		public override void _Ready(){
+
+			isMoving = false;
+
 			camera = GetNode<Camera3D>("/root/Main/Camera3D");
 			arrow_body = GetNode<MeshInstance3D>("Arrow/ArrowBody");
 			arrow = GetNode<RigidBody3D>("Arrow");
@@ -32,7 +32,6 @@ namespace src.Player{
 			// connect player to the timeout event
 			timer = GetNode<Timer>("/root/Main/Timer");
 			timer.Timeout += _on_timer_timeout;
-			isMoving = false;
 		}
 
 
@@ -94,38 +93,17 @@ namespace src.Player{
 
 		}
 
-
 		private void checkPlayerMovement(){
 			Vector3 movementCheck = (GlobalPosition - prevPos) * (new Vector3(1,0,1));
 			if(movementCheck != new Vector3(0,0,0)){
-				MainGame.playerMoving = true;
+				isMoving = true;
 			}else{
-				MainGame.playerMoving = false;
+				isMoving = false;
 			}
 
 			prevPos = GlobalPosition;
 		}
 
-
-		private void _on_timer_timeout(){
-			POWER();
-		}
-
-		private void _on_input_event(Node camera, InputEvent @event, Vector3 position, Vector3 normal, long shape_idx){
-			//click on the player body
-			if(@event is InputEventMouseButton mouseButton && mouseButton.Pressed){
-				GD.Print("Mouse Pressed on arrow");
-				is_pressed = true;
-			}
-		}
-
-		// Handle overall input 
-		public override void _Input(InputEvent @event){
-			//mouse button released
-			if(@event is InputEventMouseButton mouseButton && mouseButton.Pressed == false){
-				is_pressed = false;
-			}
-		}
 
 		private void arrowTeamVisibility(){
 			if(GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").GetMultiplayerAuthority() == Multiplayer.GetUniqueId()) {
@@ -153,6 +131,26 @@ namespace src.Player{
 			//	}
 			//}
 		}
+
+		// Handle overall input 
+		private void _on_timer_timeout(){
+			POWER();
+		}
+
+		private void _on_input_event(Node camera, InputEvent @event, Vector3 position, Vector3 normal, long shape_idx){
+			//click on the player body
+			if(@event is InputEventMouseButton mouseButton && mouseButton.Pressed){
+				GD.Print("Mouse Pressed on arrow");
+				is_pressed = true;
+			}
+		}
+		public override void _Input(InputEvent @event){
+			//mouse button released
+			if(@event is InputEventMouseButton mouseButton && mouseButton.Pressed == false){
+				is_pressed = false;
+			}
+		}
+
 	}
 }
 
