@@ -20,8 +20,10 @@ namespace src.Player{
 			Vector3 movementCheck = (GlobalPosition - prevPos) * (new Vector3(1,0,1));
 			if(movementCheck != new Vector3(0,0,0)){
 				isMoving = true;
+                AddToGroup("Moving");
 			}else{
 				isMoving = false;
+                RemoveFromGroup("Moving");
 			}
 			prevPos = GlobalPosition;
 		}

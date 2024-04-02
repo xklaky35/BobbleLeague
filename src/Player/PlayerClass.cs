@@ -44,6 +44,8 @@ namespace src.Player{
 				arrow.Hide();
 			}
 
+			checkPlayerMovement();
+
 			//if(MainGame.isPaused){
 			//	arrow.Hide();
 			//}else{
@@ -90,20 +92,20 @@ namespace src.Player{
 					arrow_body.Scale = length_vector;
 				}
 			}
-
 		}
 
 		private void checkPlayerMovement(){
 			Vector3 movementCheck = (GlobalPosition - prevPos) * (new Vector3(1,0,1));
 			if(movementCheck != new Vector3(0,0,0)){
 				isMoving = true;
+				AddToGroup("Moving");
 			}else{
 				isMoving = false;
+				RemoveFromGroup("Moving");
 			}
 
 			prevPos = GlobalPosition;
 		}
-
 
 		private void arrowTeamVisibility(){
 			if(GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").GetMultiplayerAuthority() == Multiplayer.GetUniqueId()) {
@@ -135,6 +137,7 @@ namespace src.Player{
 		// Handle overall input 
 		private void _on_timer_timeout(){
 			POWER();
+			
 		}
 
 		private void _on_input_event(Node camera, InputEvent @event, Vector3 position, Vector3 normal, long shape_idx){

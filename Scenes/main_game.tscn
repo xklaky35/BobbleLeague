@@ -70,4 +70,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, -1)
 [node name="2" type="Node3D" parent="PlayerSpawnPoints/1" groups=["PlayerSpawnRed"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1)
 
+[node name="CheckDelayTimer" type="Timer" parent="."]
+one_shot = true
+
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
+[connection signal="timeout" from="CheckDelayTimer" to="." method="_on_check_delay_timer_timeout"]
