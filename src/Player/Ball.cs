@@ -10,6 +10,7 @@ namespace src.Player{
 		public override void _Ready(){
 			prevPos = GlobalPosition;
 			isMoving = false;
+			AddToGroup("Ball");
 		}
 
 		public override void _PhysicsProcess(double delta){
@@ -20,10 +21,10 @@ namespace src.Player{
 			Vector3 movementCheck = (GlobalPosition - prevPos) * (new Vector3(1,0,1));
 			if(movementCheck != new Vector3(0,0,0)){
 				isMoving = true;
-                AddToGroup("Moving");
+				AddToGroup("Moving");
 			}else{
 				isMoving = false;
-                RemoveFromGroup("Moving");
+				RemoveFromGroup("Moving");
 			}
 			prevPos = GlobalPosition;
 		}

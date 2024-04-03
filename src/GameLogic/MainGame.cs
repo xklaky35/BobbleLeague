@@ -18,8 +18,6 @@ namespace src.GameLogic{
 				readyToCheck = false;
 				timer.Start();
 			}
-
-			GD.Print(readyToCheck);
 		}
 
 		private void _on_timer_timeout(){

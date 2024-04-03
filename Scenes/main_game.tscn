@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://fs3l27lttmic"]
+[gd_scene load_steps=8 format=3 uid="uid://fs3l27lttmic"]
 
 [ext_resource type="Script" path="res://src/GameLogic/MainGame.cs" id="1_1en8r"]
 [ext_resource type="Script" path="res://src/Player/PlayerManager.cs" id="1_kpqce"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://bxqicvupecqdm" path="res://Scenes/GameOnbjects/ball.tscn" id="2_3lt6f"]
 [ext_resource type="PackedScene" uid="uid://cbo4hr3xgc4lx" path="res://Scenes/GameOnbjects/player.tscn" id="2_je0w2"]
 [ext_resource type="Script" path="res://src/UI/Label.cs" id="4_m4t01"]
+[ext_resource type="PackedScene" uid="uid://wrvfrr2rxvw1" path="res://ScoreDisplay.tscn" id="7_wa6lt"]
 
 [node name="Main" type="Node3D"]
 script = ExtResource("1_1en8r")
@@ -31,12 +32,17 @@ anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="Label" type="Label" parent="UI"]
+[node name="TimeLabel" type="Label" parent="UI"]
 layout_mode = 0
 offset_right = 140.0
 offset_bottom = 70.0
 text = "Timer: "
 script = ExtResource("4_m4t01")
+
+[node name="ScoreDisplay" parent="UI" instance=ExtResource("7_wa6lt")]
+layout_mode = 1
+offset_right = 360.0
+offset_bottom = -41.0
 
 [node name="Timer" type="Timer" parent="."]
 wait_time = 10.0
