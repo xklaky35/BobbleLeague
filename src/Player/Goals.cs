@@ -5,8 +5,8 @@ public partial class Goals : Node3D{
 	private Area3D ScoreZoneRed;
 	private Area3D ScoreZoneBlue;
 
-    [Signal]
-    public delegate void OnGoalEventHandler();
+	[Signal]
+	public delegate void OnGoalEventHandler();
 
 	public override void _Ready(){
 		ScoreZoneRed = GetNode<Area3D>("ScoreZoneRed");
@@ -18,7 +18,7 @@ public partial class Goals : Node3D{
 		if(body.IsInGroup("Ball")){
 			GameManager.redScore++;
 			GD.Print("Red Score: " + GameManager.redScore);
-            EmitSignal("OnGoal");
+			EmitSignal("OnGoal");
 		}
 	}
 
@@ -28,7 +28,7 @@ public partial class Goals : Node3D{
 		if(body.IsInGroup("Ball")){
 			GameManager.blueScore++;
 			GD.Print("Blue Score: " + GameManager.blueScore);
-            EmitSignal("OnGoal");
+			EmitSignal("OnGoal");
 		}
 	}
 

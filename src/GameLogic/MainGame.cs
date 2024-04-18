@@ -2,7 +2,7 @@ using Godot;
 
 namespace src.GameLogic{
 	public partial class MainGame : Node3D{
-
+        
 		private Timer timer;
 		private Timer checkDelayTimer;
 
